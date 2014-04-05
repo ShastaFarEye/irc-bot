@@ -2,5 +2,49 @@
 /logs/raw.log
 /logs/stdio.log
 
-/modules/simplevert.pyc
-/modules/vertcoin.pyc
+*.py[cod]
+*.swp
+*.swo
+*.swn
+*.swm
+.idea
+.noseids
+cover
+
+# tmp saves
+*~
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+.ropeproject
+.sass-cache
+tags
