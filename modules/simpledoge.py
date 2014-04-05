@@ -16,7 +16,7 @@ def pool(bot, trigger):
     workers = results['workers']
     bot.say("Workers: {0} | Hashrate: {1}".format(workers, "%0.1f Mh/s" % (hashrate/1000.0)))
 
-@willie.module.commands('round')
+@willie.module.commands('round', 'luck')
 def round(bot, trigger):
     try:
         results = requests.get('http://simpledoge.com/api/pool_stats').json()

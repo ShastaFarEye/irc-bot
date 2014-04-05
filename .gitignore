@@ -1,3 +1,6 @@
 /logs/exceptions.log
 /logs/raw.log
 /logs/stdio.log
+
+/modules/simplevert.pyc
+/modules/vertcoin.pyc
