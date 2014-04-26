@@ -1,5 +1,6 @@
 import willie
 import requests
+from datetime import timedelta
 
 sd_last_block = None
 sd_glob_bot = None
@@ -24,10 +25,24 @@ def round(bot, trigger):
         print "GET /api/pool_stats failed for .round"
         return
     
+    # Luck
     completed_shares = results['completed_shares']
     shares_to_solve = results['shares_to_solve']
     luck = (shares_to_solve / completed_shares) * 100.0
-    bot.say("Luck: {0}".format("%0.1f%%" % luck))
+
+    # Round Duration
+    round_duration = results['round_duration']
+    round_duration_formatted = timedelta(seconds=int(round_duration))
+
+    # Estimated Time Left
+    est_sec_remaining = results['est_sec_remaining']
+    est_sec_remaining_formatted = None
+    if est_sec_remaining > 0:
+        est_sec_remaining_formatted = timedelta(seconds=int(est_sec_remaining))
+    else:
+        est_sec_remaining_formatted = '-' + str(datetime.timedelta() - timedelta(seconds=int(est_sec_remaining)))
+
+    bot.say("Luck: {0} | Round Duration: {1} | Est. Time Remaining: {2}".format(("%0.1f%%" % luck), round_duration_formatted, est_sec_remaining_formatted))
 
 @willie.module.commands('stats')
 def stats(bot, trigger):
@@ -67,16 +82,17 @@ def check_new_block(bot):
     global sd_last_block, sd_glob_bot
     # jobs automatically get provided the bot context when run
     try:
-        results = requests.get('http://simpledoge.com/api/pool_stats').json()
+        results = requests.get('http://simpledoge.com/api/last_block').json()
     except Exception:
-        print "GET /api/pool_stats failed on check_new_block"
+        print "GET /api/last_block failed on check_new_block"
         return
 
-    new_block = results['last_block_found']
+    new_block = results['height']
     print('SimpleDoge Block: {0}'.format(new_block))
     # sd_glob_bot.msg("#simpledoge", 'SimpleDoge Block: {0}'.format(new_block))
     # don't announce anything on boot, just set the last block
     if sd_last_block is not None and new_block > sd_last_block:
-        print('New block found on SimpleDoge!')
-        sd_glob_bot.msg("#simpledoge", "New block found on SimpleDoge!")
+        block_msg = 'New block #{0} found by {1} on SimpleDoge! [Duration: {2} | Diff: {3}]'.format(new_block, results['found_by'], results['duration'], ('%0.3f' % results['difficulty']))
+        print(block_msg)
+        sd_glob_bot.msg("#simpledoge", block_msg)
     sd_last_block = new_block
