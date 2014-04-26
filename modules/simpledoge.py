@@ -12,7 +12,7 @@ def pool(bot, trigger):
     except Exception:
         print "GET /api/pool_stats failed for .pool"
         return
-    
+
     hashrate = results['hashrate']
     workers = results['workers']
     bot.say("Workers: {0} | Hashrate: {1}".format(workers, "%0.1f Mh/s" % (hashrate/1000.0)))
@@ -24,7 +24,7 @@ def round(bot, trigger):
     except Exception:
         print "GET /api/pool_stats failed for .round"
         return
-    
+
     # Luck
     completed_shares = results['completed_shares']
     shares_to_solve = results['shares_to_solve']
@@ -40,27 +40,27 @@ def round(bot, trigger):
     if est_sec_remaining > 0:
         est_sec_remaining_formatted = timedelta(seconds=int(est_sec_remaining))
     else:
-        est_sec_remaining_formatted = '-' + str(datetime.timedelta() - timedelta(seconds=int(est_sec_remaining)))
+        est_sec_remaining_formatted = '-' + str(timedelta() - timedelta(seconds=int(est_sec_remaining)))
 
     bot.say("Luck: {0} | Round Duration: {1} | Est. Time Remaining: {2}".format(("%0.1f%%" % luck), round_duration_formatted, est_sec_remaining_formatted))
 
 @willie.module.commands('stats')
 def stats(bot, trigger):
     address = trigger.group(2)
-    
+
     try:
         results = requests.get('http://simpledoge.com/api/'+address).json()
     except Exception:
         print "GET /api/<address> failed for .stats"
         return
-    
+
     workers = results['workers']
     message = ""
     for w in workers:
         status = 'online' if w['online'] else 'offline'
         message += '[{0}] {1} | '.format(status, w['name'])
     message = message[:-2]
-    
+
     bot.say(message)
 
 @willie.module.commands('sd')
@@ -68,7 +68,7 @@ def sd(bot, trigger):
     # Can only be done in privmsg by an admin
     if not trigger.admin:
         return
-    
+
     global sd_glob_bot
     sd_glob_bot = bot
 
