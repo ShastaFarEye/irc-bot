@@ -101,7 +101,7 @@ def last_block(bot, trigger=None, results=None):
     block_msg = ('{} #{height:,} found by {found_by} on {} '
                  '[Duration: {duration} | Diff: {difficulty:,.3f} | Luck: {luck:,.0f}%]'
                  .format(msg, bot.memory['name'], **results))
-    bot.say(block_msg)
+    bot.msg(bot.config.core.channels[0], block_msg)
 
 
 def check_new_block(bot):
@@ -117,4 +117,5 @@ def check_new_block(bot):
     # don't announce anything on boot, just set the last block
     if lb is not None and results['height'] > lb:
         last_block(bot, results=results)
+    print "Blockheight " + str(results['height'])
     bot.memory['last_block'] = results['height']
